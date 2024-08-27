@@ -2,56 +2,42 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-[RequireComponent(typeof(Rotator))]
 [RequireComponent(typeof(Mover))]
-[RequireComponent(typeof(Scaler))]
+[RequireComponent(typeof(Idle))]
 public class StateMachine : MonoBehaviour
 {
-    [SerializeField] private State _currentState;
+    [field: SerializeField] public State CurrentState { get; private set; }
 
     private Dictionary<Type, State> _states = new Dictionary<Type, State>();
+    private Mover _moveState;
 
     private void Awake()
     {
-        _states.Add(typeof(Rotator), GetComponent<Rotator>());
+        _moveState = GetComponent<Mover>();
         _states.Add(typeof(Mover), GetComponent<Mover>());
-        _states.Add(typeof(Scaler), GetComponent<Scaler>());
+        _states.Add(typeof(Idle), GetComponent<Idle>());
     }
 
     private void Start()
     {
-        _currentState.Enter();
+        CurrentState.Enter();
     }
 
-    private void Update()
+    public void StartIdle()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-            StartRotate();
-        else if (Input.GetKeyDown(KeyCode.Q))
-            StartMove();
-        else if (Input.GetKeyDown(KeyCode.W))
-            StartScale();
+        ChangeState(typeof(Idle));
     }
 
-    public void StartRotate()
+    public void StartMove(ITarget target)
     {
-        ChangeState(typeof(Rotator));
-    }
-
-    public void StartMove()
-    {
+        _moveState.SelectTarget(target);
         ChangeState(typeof(Mover));
-    }
-
-    public void StartScale()
-    {
-        ChangeState(typeof(Scaler));
     }
 
     private void ChangeState(Type type)
     {
-        _currentState.Exit();
-        _currentState = _states[type];
-        _currentState.Enter();
+        CurrentState.Exit();
+        CurrentState = _states[type];
+        CurrentState.Enter();
     }
 }

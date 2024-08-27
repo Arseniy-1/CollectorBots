@@ -1,10 +1,9 @@
 using System.Collections;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class ResourseSpanwer : MonoBehaviour
 {
-    [SerializeField] private float _spawnDelay = 1.0f;
+    [SerializeField] private float _spawnDelay = 1.5f;
     [SerializeField] private ResoursePool _resoursePool;
 
     private void Start()
@@ -25,11 +24,15 @@ public class ResourseSpanwer : MonoBehaviour
 
     public void Spawn()
     {
-        Vector3 spawnPoint = new Vector3(transform.position.x, 1, transform.position.z);
+        float radiusMultiplyer = 10f;
+        float spawnHeight = 0.5f;
+        Vector3 spawnPoint = Random.insideUnitSphere * radiusMultiplyer;
+        spawnPoint.y = spawnHeight;
 
         Resourse resourse = _resoursePool.Get();
         resourse.OnDisabled += PlaceInPool;
 
+        Debug.Log("sub");
         resourse.transform.position = spawnPoint;
     }
 

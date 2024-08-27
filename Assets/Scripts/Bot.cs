@@ -8,7 +8,7 @@ public class Bot : MonoBehaviour
     [SerializeField] private float _distanceToInterract;
     [SerializeField] private float _speed;
 
-    private StateMachine _stateMachine; 
+    [SerializeField] private StateMachine _stateMachine;
 
     public ITarget CurrentTarget { get; private set; }
 
@@ -23,28 +23,56 @@ public class Bot : MonoBehaviour
         }
     }
 
-    private void Awake()
+    private void OnTriggerEnter(Collider other)
     {
-        _stateMachine = new StateMachineFactory(this).Create();
+        if (other.TryGetComponent(out ITarget target))
+        {
+            if (target == CurrentTarget)
+            {
+                Interact(target);
+            }
+
+            else if(target == _base)
+            {
+
+            }
+        }
     }
 
-    internal void Put() => throw new NotImplementedException();
+    public State GetCurrentState() => _stateMachine.CurrentState;
 
-    public void Move()
+    public bool HasResourse(Resourse resourse)
     {
-        transform.LookAt(CurrentTarget.Transform.position);
-        transform.position += transform.forward * _speed * Time.deltaTime;
+        return resourse == GetComponentInChildren<Resourse>() || (CurrentTarget as Resourse) == resourse;
     }
 
-    public void Collect(Resourse resourse)
+    public void Follow(ITarget targetResourse)
     {
-        resourse.transform.position = _hand.transform.position;
-        resourse.transform.rotation = _hand.transform.rotation;
-        resourse.transform.parent = transform;
+        CurrentTarget = targetResourse;
+        _stateMachine.StartMove(CurrentTarget);
     }
 
     public void Initialize(ITarget target)
     {
         _base = target;
+    }
+
+    private void Interact(ITarget target)
+    {
+        if (target is Resourse resourse)
+        {
+            resourse.transform.parent = transform;
+            resourse.transform.position = _hand.transform.position;
+            Follow(_base);
+        }
+        else if (target is Base)
+        {
+            Stay();
+        }
+    }
+
+    private void Stay()
+    {
+        _stateMachine.StartIdle();
     }
 }

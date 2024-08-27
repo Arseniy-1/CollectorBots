@@ -1,14 +1,17 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
-public class ResoursePool : MonoBehaviour
+[Serializable]
+public class ResoursePool
 {
     [SerializeField] private int _poolCapacity;
     [SerializeField] private Resourse _resoursePrefab;
 
     private Queue<Resourse> _resourses = new Queue<Resourse>();
 
-    private void Awake() //Если пул будет не Monobeh, то не сможем использьвать Awake()
+    public ResoursePool()
     {
         for (int i = 0; i < _poolCapacity; i++)
             ExpandPool();

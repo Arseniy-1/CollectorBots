@@ -45,6 +45,9 @@ GameObject:
   - component: {fileID: 5650921548322027902}
   - component: {fileID: 7714384706942867918}
   - component: {fileID: 4357801484711094865}
+  - component: {fileID: 4170480052868042187}
+  - component: {fileID: 1451486007135012621}
+  - component: {fileID: 8559899664823727971}
   m_Layer: 0
   m_Name: Unit
   m_TagString: Untagged
@@ -154,10 +157,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hand: {fileID: 8316159040175562332}
-  _base: {fileID: 0}
-  _targetResourse: {fileID: 0}
+  _distanceToInterract: 0
   _speed: 1
-  <IsReturned>k__BackingField: 1
+  _stateMachine: {fileID: 8559899664823727971}
 --- !u!54 &4357801484711094865
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -185,3 +187,41 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4170480052868042187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5477033254571839342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73329e4c8d5785442afc514391796104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 1
+--- !u!114 &1451486007135012621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5477033254571839342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cba7945b614a8994195c422cef121f8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8559899664823727971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5477033254571839342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f3c643a1eb731e4ba645c4187f2771b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <CurrentState>k__BackingField: {fileID: 1451486007135012621}
