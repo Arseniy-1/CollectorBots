@@ -32,7 +32,6 @@ public class ResourseSpanwer : MonoBehaviour
         Resourse resourse = _resoursePool.Get();
         resourse.OnDisabled += PlaceInPool;
 
-        Debug.Log("sub");
         resourse.transform.position = spawnPoint;
     }
 

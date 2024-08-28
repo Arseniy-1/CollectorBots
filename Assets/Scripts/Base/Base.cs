@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,8 @@ public class Base : MonoBehaviour, ITarget
 
     public Transform Transform { get; private set; }
 
+    public event Action<int> OnResourseCountChanged;
+
     private void Awake()
     {
         Transform = transform;
@@ -27,14 +30,12 @@ public class Base : MonoBehaviour, ITarget
         StartCoroutine(SendingBots());
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void GetResourse(Resourse resourse)
     {
-        if (other.TryGetComponent(out Resourse resourse))
-        {
-            resourse.RaiseDestroy();
-            resourse.transform.parent = null;
-            _resoursesCount++;
-        }
+        resourse.RaiseDestroy();
+        resourse.transform.parent = null;
+        _resoursesCount++;
+        OnResourseCountChanged?.Invoke(_resoursesCount);
     }
 
     private IEnumerator CreatingStartUnits()
@@ -71,13 +72,13 @@ public class Base : MonoBehaviour, ITarget
         List<Resourse> resourses = _scaner.Scan();
         List<Resourse> busyResourses = new List<Resourse>();
 
-        foreach (Resourse res in resourses)
+        foreach (Resourse resourse in resourses)
         {
             foreach (Bot bot in _units)
             {
-                if (bot.HasResourse(res))
+                if (bot.HasResourse(resourse))
                 {
-                    busyResourses.Add(res);
+                    busyResourses.Add(resourse);
                     break;
                 }
             }

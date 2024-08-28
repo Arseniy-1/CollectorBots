@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class Bot : MonoBehaviour
@@ -10,7 +9,8 @@ public class Bot : MonoBehaviour
 
     [SerializeField] private StateMachine _stateMachine;
 
-    public ITarget CurrentTarget { get; private set; }
+    [field: SerializeField] public Resourse CurrentResourse { get; private set; } = null;
+    [field: SerializeField] public ITarget CurrentTarget { get; private set; }
 
     public bool IsNearestToTarget
     {
@@ -26,24 +26,14 @@ public class Bot : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out ITarget target))
-        {
-            if (target == CurrentTarget)
-            {
-                Interact(target);
-            }
-
-            else if(target == _base)
-            {
-
-            }
-        }
+            Interact(target);
     }
 
     public State GetCurrentState() => _stateMachine.CurrentState;
 
     public bool HasResourse(Resourse resourse)
     {
-        return resourse == GetComponentInChildren<Resourse>() || (CurrentTarget as Resourse) == resourse;
+        return CurrentResourse == resourse || (CurrentTarget as Resourse) == resourse;
     }
 
     public void Follow(ITarget targetResourse)
@@ -61,12 +51,18 @@ public class Bot : MonoBehaviour
     {
         if (target is Resourse resourse)
         {
-            resourse.transform.parent = transform;
-            resourse.transform.position = _hand.transform.position;
-            Follow(_base);
+            if (resourse == (Resourse)CurrentTarget)
+            {
+                resourse.transform.parent = transform;
+                resourse.transform.position = _hand.transform.position;
+                CurrentResourse = resourse;
+                Follow(_base);
+            }
         }
-        else if (target is Base)
+        else if (target is Base mainBase && mainBase == (Base)_base)
         {
+            mainBase.GetResourse(CurrentResourse);
+            CurrentResourse = null;
             Stay();
         }
     }
