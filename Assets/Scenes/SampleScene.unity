@@ -362,8 +362,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 324f2bad4ac54ba419c43624649176fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitPrefab: {fileID: 7714384706942867918, guid: 31de28599c64cb44b82228b0e505922c, type: 3}
   _scaner: {fileID: 398030369}
+  _botFactory:
+    _botPrefab: {fileID: 7714384706942867918, guid: 31de28599c64cb44b82228b0e505922c, type: 3}
+    _mainBase: {fileID: 0}
 --- !u!1 &586585608
 GameObject:
   m_ObjectHideFlags: 0

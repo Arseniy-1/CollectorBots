@@ -12,9 +12,6 @@ public class Mover : State
     {
         if(currentTarget is MonoBehaviour target) 
             _currentTarget = target.transform;
-
-        //Vector3 targeeeeet = currentTarget.Transform.position;
-        //Debug.Log(targeeeeet);
     }
 
     private void Move()

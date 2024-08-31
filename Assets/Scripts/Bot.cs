@@ -4,24 +4,12 @@ public class Bot : MonoBehaviour
 {
     [SerializeField] private Transform _hand;
     [SerializeField] private ITarget _base;
-    [SerializeField] private float _distanceToInterract;
-    [SerializeField] private float _speed;
 
     [SerializeField] private StateMachine _stateMachine;
 
     [field: SerializeField] public Resourse CurrentResourse { get; private set; } = null;
     [field: SerializeField] public ITarget CurrentTarget { get; private set; }
-
-    public bool IsNearestToTarget
-    {
-        get
-        {
-            if (CurrentTarget == null)
-                return true;
-
-            return Vector3.Distance(transform.position, CurrentTarget.Transform.position) <= _distanceToInterract;
-        }
-    }
+    public bool IsFree => _stateMachine.CurrentState is Idle;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -29,7 +17,6 @@ public class Bot : MonoBehaviour
             Interact(target);
     }
 
-    public State GetCurrentState() => _stateMachine.CurrentState;
 
     public bool HasResourse(Resourse resourse)
     {
@@ -42,9 +29,9 @@ public class Bot : MonoBehaviour
         _stateMachine.StartMove(CurrentTarget);
     }
 
-    public void Initialize(ITarget target)
+    public void Initialize(Base mainBase)
     {
-        _base = target;
+        _base = mainBase;
     }
 
     private void Interact(ITarget target)
@@ -61,7 +48,7 @@ public class Bot : MonoBehaviour
         }
         else if (target is Base mainBase && mainBase == (Base)_base)
         {
-            mainBase.GetResourse(CurrentResourse);
+            mainBase.AddResourse(CurrentResourse);
             CurrentResourse = null;
             Stay();
         }

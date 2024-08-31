@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(ResourseScaner))]
+[RequireComponent(typeof(BotFactory))]
 public class Base : MonoBehaviour, ITarget
 {
-    [SerializeField] private Bot _unitPrefab;
     [SerializeField] private ResourseScaner _scaner;
+    [SerializeField] private BotFactory _botFactory;
 
     private float _unitSendDelay = 1f;
     private float _unitSpawnDelay = 2.5f;
@@ -26,11 +28,12 @@ public class Base : MonoBehaviour, ITarget
 
     private void Start()
     {
+        _botFactory.Initialize(this);
         StartCoroutine(CreatingStartUnits());
         StartCoroutine(SendingBots());
     }
 
-    public void GetResourse(Resourse resourse)
+    public void AddResourse(Resourse resourse)
     {
         resourse.RaiseDestroy();
         resourse.transform.parent = null;
@@ -44,16 +47,9 @@ public class Base : MonoBehaviour, ITarget
 
         for (int i = 0; i < _unitsCount; i++)
         {
-            CreateUnit();
+            _units.Add(_botFactory.Create());
             yield return delay;
         }
-    }
-
-    private void CreateUnit()
-    {
-        Bot unit = Instantiate(_unitPrefab);
-        unit.Initialize(this);
-        _units.Add(unit);
     }
 
     private IEnumerator SendingBots()
@@ -93,7 +89,11 @@ public class Base : MonoBehaviour, ITarget
         }
 
         foreach (Bot bot in _units)
-            if (bot.GetCurrentState() is Idle && resourses.Count != 0)
+        {
+            if (bot.IsFree && resourses.Count != 0)
+            {
                 bot.Follow(resourses[0]);
+            }
+        }
     }
 }

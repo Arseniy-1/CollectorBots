@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ResourseScaner : MonoBehaviour
@@ -9,12 +9,12 @@ public class ResourseScaner : MonoBehaviour
     public List<Resourse> Scan()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, _scanRadius);
-        List<Resourse> resourses = new List<Resourse>();
+        HashSet<Resourse> resourses = new HashSet<Resourse>();
 
         foreach (Collider hit in hits)
-            if (hit.TryGetComponent(out Resourse resourse) && resourses.Contains(resourse) == false)
+            if (hit.TryGetComponent(out Resourse resourse))
                 resourses.Add(resourse);
         
-        return resourses;
+        return resourses.ToList();
     }
 }

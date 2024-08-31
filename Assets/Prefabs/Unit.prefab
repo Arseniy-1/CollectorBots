@@ -157,8 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hand: {fileID: 8316159040175562332}
-  _distanceToInterract: 0
-  _speed: 1
+  _speed: 10
   _stateMachine: {fileID: 8559899664823727971}
   <CurrentResourse>k__BackingField: {fileID: 0}
 --- !u!54 &4357801484711094865
@@ -200,7 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73329e4c8d5785442afc514391796104, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 1
+  _speed: 3
 --- !u!114 &1451486007135012621
 MonoBehaviour:
   m_ObjectHideFlags: 0
