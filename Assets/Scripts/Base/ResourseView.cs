@@ -8,12 +8,12 @@ public class ResourseView : MonoBehaviour
 
     private void OnEnable()
     {
-        _base.OnResourseCountChanged += Show;
+        _base.ResourseCountChanged += Show;
     }
 
     private void OnDisable()
     {
-        _base.OnResourseCountChanged -= Show;
+        _base.ResourseCountChanged -= Show;
     }
 
     private void Show(int amount)

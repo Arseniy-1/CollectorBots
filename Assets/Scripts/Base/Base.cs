@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(ResourseScaner))]
-[RequireComponent(typeof(BotFactory))]
 public class Base : MonoBehaviour, ITarget
 {
     [SerializeField] private ResourseScaner _scaner;
     [SerializeField] private BotFactory _botFactory;
+    [SerializeField] private Transform _spawnPoint;
 
     private float _unitSendDelay = 1f;
     private float _unitSpawnDelay = 2.5f;
@@ -19,7 +19,7 @@ public class Base : MonoBehaviour, ITarget
 
     public Transform Transform { get; private set; }
 
-    public event Action<int> OnResourseCountChanged;
+    public event Action<int> ResourseCountChanged;
 
     private void Awake()
     {
@@ -28,7 +28,6 @@ public class Base : MonoBehaviour, ITarget
 
     private void Start()
     {
-        _botFactory.Initialize(this);
         StartCoroutine(CreatingStartUnits());
         StartCoroutine(SendingBots());
     }
@@ -38,7 +37,7 @@ public class Base : MonoBehaviour, ITarget
         resourse.RaiseDestroy();
         resourse.transform.parent = null;
         _resoursesCount++;
-        OnResourseCountChanged?.Invoke(_resoursesCount);
+        ResourseCountChanged?.Invoke(_resoursesCount);
     }
 
     private IEnumerator CreatingStartUnits()
@@ -47,7 +46,11 @@ public class Base : MonoBehaviour, ITarget
 
         for (int i = 0; i < _unitsCount; i++)
         {
-            _units.Add(_botFactory.Create());
+            Bot bot = _botFactory.Create();
+            bot.Initialize(this);
+            bot.transform.position = _spawnPoint.position;
+            _units.Add(bot);
+
             yield return delay;
         }
     }
@@ -93,6 +96,7 @@ public class Base : MonoBehaviour, ITarget
             if (bot.IsFree && resourses.Count != 0)
             {
                 bot.Follow(resourses[0]);
+                resourses.RemoveAt(0);
             }
         }
     }
