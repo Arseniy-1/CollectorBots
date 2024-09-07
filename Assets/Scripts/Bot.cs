@@ -3,7 +3,7 @@ using UnityEngine;
 public class Bot : MonoBehaviour
 {
     [SerializeField] private Transform _hand;
-    [SerializeField] private ITarget _base;
+    [SerializeField] private Base _base;
 
     [SerializeField] private StateMachine _stateMachine;
 
@@ -16,7 +16,6 @@ public class Bot : MonoBehaviour
         if (other.TryGetComponent(out ITarget target))
             Interact(target);
     }
-
 
     public bool HasResourse(Resourse resourse)
     {
@@ -38,7 +37,7 @@ public class Bot : MonoBehaviour
     {
         if (target is Resourse resourse)
         {
-            if (resourse == (Resourse)CurrentTarget)
+            if (target == CurrentTarget)
             {
                 resourse.transform.parent = transform;
                 resourse.transform.position = _hand.transform.position;
@@ -46,7 +45,7 @@ public class Bot : MonoBehaviour
                 Follow(_base);
             }
         }
-        else if (target is Base mainBase && mainBase == (Base)_base)
+        else if (target is Base mainBase && mainBase == _base)
         {
             mainBase.AddResourse(CurrentResourse);
             CurrentResourse = null;

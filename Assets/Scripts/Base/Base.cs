@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(ResourseScaner))]
@@ -17,9 +18,9 @@ public class Base : MonoBehaviour, ITarget
 
     private List<Bot> _units = new List<Bot>();
 
-    public Transform Transform { get; private set; }
-
     public event Action<int> ResourseCountChanged;
+
+    public Transform Transform { get; private set; }
 
     private void Awake()
     {
@@ -69,27 +70,19 @@ public class Base : MonoBehaviour, ITarget
     private void SendBots()
     {
         List<Resourse> resourses = _scaner.Scan();
-        List<Resourse> busyResourses = new List<Resourse>();
 
-        foreach (Resourse resourse in resourses)
-        {
-            foreach (Bot bot in _units)
-            {
-                if (bot.HasResourse(resourse))
-                {
-                    busyResourses.Add(resourse);
-                    break;
-                }
-            }
-        }
+        IEnumerable<Resourse> TargetResourses = _units
+            .Where(unit => unit.CurrentTarget is Resourse)
+            .Select(unit => unit.CurrentTarget)
+            .Cast<Resourse>();
 
-        for(int i = resourses.Count - 1; i >= 0; i--)
-        {
-            if (busyResourses.Contains(resourses[i]))
-            {
-                resourses.RemoveAt(i);
-            }
-        }
+        IEnumerable<Resourse> TakenResourses = _units
+            .Where(unit => unit.CurrentResourse != null)
+            .Select(unit => unit.CurrentResourse);
+
+        IEnumerable<Resourse> busyResourses = TargetResourses.Concat(TakenResourses);
+
+        resourses = resourses.Except(busyResourses).ToList();
 
         foreach (Bot bot in _units)
         {

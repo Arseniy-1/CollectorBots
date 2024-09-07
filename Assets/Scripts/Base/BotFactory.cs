@@ -7,10 +7,5 @@ public class BotFactory
 {
     [SerializeField] private Bot _botPrefab;
 
-    public Bot Create()
-    {
-        Bot unit = Object.Instantiate(_botPrefab);
-
-        return unit;
-    }
+    public Bot Create() => Object.Instantiate(_botPrefab);
 }
