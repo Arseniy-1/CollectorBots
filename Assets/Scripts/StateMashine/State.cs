@@ -11,10 +11,8 @@ public abstract class State : MonoBehaviour
     public virtual void Enter() =>
         enabled = true;
 
-    public virtual void Exit()
-    {
+    public virtual void Exit() =>
         enabled = false;
-    }
 
     protected virtual void OnAwake() { }
 }

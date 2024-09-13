@@ -5,6 +5,10 @@ public class ResourseSpanwer : MonoBehaviour
 {
     [SerializeField] private float _spawnDelay = 1.5f;
     [SerializeField] private ResoursePool _resoursePool;
+    [SerializeField] private LayerMask _baseLayerMask;
+    [SerializeField] private float _spawnRadius;
+
+    private float _resourseCheckRadius = 4;
 
     private void Start()
     {
@@ -22,17 +26,28 @@ public class ResourseSpanwer : MonoBehaviour
         }
     }
 
-    public void Spawn()
+    private Vector3 GenerateRandomPosition()
     {
-        float radiusMultiplyer = 10f;
         float spawnHeight = 0.5f;
-        Vector3 spawnPoint = Random.insideUnitSphere * radiusMultiplyer;
+        Vector3 spawnPoint = Random.insideUnitSphere * _spawnRadius;
         spawnPoint.y = spawnHeight;
+
+        return spawnPoint;
+    }
+
+    private void Spawn()
+    {
+        Vector3 spawnPosition = GenerateRandomPosition();
+
+        while (Physics.OverlapSphere(spawnPosition, _resourseCheckRadius, _baseLayerMask).Length != 0)
+        {
+            spawnPosition = GenerateRandomPosition();
+        }
 
         Resourse resourse = _resoursePool.Get();
         resourse.OnDisabled += PlaceInPool;
 
-        resourse.transform.position = spawnPoint;
+        resourse.transform.position = spawnPosition;
     }
 
     public void PlaceInPool(Resourse resourse)

@@ -16,7 +16,13 @@ public class Mover : State
 
     private void Move()
     {
-        transform.LookAt(_currentTarget.position);
+        Vector3 direction = _currentTarget.transform.position - transform.position;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+
+        rotation.x = 0;
+        rotation.z = 0;
+        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, _speed * Time.deltaTime);
+
         transform.position += transform.forward * _speed * Time.deltaTime;
     }
 }
