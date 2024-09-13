@@ -6,10 +6,10 @@ using System;
 [RequireComponent(typeof(Idle))]
 public class StateMachine : MonoBehaviour
 {
-    [field: SerializeField] public State CurrentState { get; private set; }
-
     private Dictionary<Type, State> _states = new Dictionary<Type, State>();
     private Mover _moveState;
+
+    [field: SerializeField] public State CurrentState { get; private set; }
 
     private void Awake()
     {
