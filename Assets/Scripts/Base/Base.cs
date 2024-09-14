@@ -15,7 +15,7 @@ public class Base : MonoBehaviour, ITarget
 
     private int _baseBuildPrice = 5;
     private float _unitSendDelay = 1f;
-    private int _resoursesCount = 3;
+    private int _resoursesCount = 0;
     private bool _isPrepearingToBuild = false;
 
     [SerializeField] private List<Bot> _bots = new List<Bot>();
@@ -38,7 +38,6 @@ public class Base : MonoBehaviour, ITarget
 
     private void Start()
     {
-        TrySpawnBot();
         StartCoroutine(SendingBots());
     }
 
