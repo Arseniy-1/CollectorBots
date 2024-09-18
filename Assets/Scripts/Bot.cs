@@ -21,11 +21,6 @@ public class Bot : MonoBehaviour
             Interact(target);
     }
 
-    public bool HasResourse(Resourse resourse)
-    {
-        return CurrentResourse == resourse || (CurrentTarget as Resourse) == resourse;
-    }
-
     public void Follow(ITarget targetResourse)
     {
         CurrentTarget = targetResourse;

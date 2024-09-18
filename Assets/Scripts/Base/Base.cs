@@ -10,13 +10,14 @@ public class Base : MonoBehaviour, ITarget
     [SerializeField] private ResourseScaner _scaner;
     [SerializeField] private BotFactory _botFactory;
     [SerializeField] private Transform _spawnPoint;
-    [SerializeField] private ResoursesDataBase _resoursesDataBase;
+    [SerializeField] private BusyResoursesDataBase _resoursesDataBase;
     [SerializeField] private BaseFactory _baseFactory;
 
     private int _baseBuildPrice = 5;
     private float _unitSendDelay = 1f;
     private int _resoursesCount = 0;
     private bool _isPrepearingToBuild = false;
+    private int _minBotsCountToBuild = 2;
 
     [SerializeField] private List<Bot> _bots = new List<Bot>();
 
@@ -34,20 +35,15 @@ public class Base : MonoBehaviour, ITarget
     private void OnEnable()
     {
         ResourseCountChanged?.Invoke(_resoursesCount);
-    }
-
-    private void Start()
-    {
         StartCoroutine(SendingBots());
     }
 
-    public void Initialize(Bot startBot, BaseFactory baseFactory, ResoursesDataBase resoursesDataBase)
+    public void Initialize(Bot startBot, BaseFactory baseFactory, BusyResoursesDataBase resoursesDataBase)
     {
         _resoursesDataBase = resoursesDataBase;
         _baseFactory = baseFactory;
         _bots.Add(startBot);
         _resoursesCount = 0;
-        StartCoroutine(SendingBots());
     }
 
     public void StartPrepeareToBuild()
@@ -71,10 +67,12 @@ public class Base : MonoBehaviour, ITarget
         _resoursesDataBase.RemoveBusyResourse(resourse);
         ResourseCountChanged?.Invoke(_resoursesCount);
 
-        if (_isPrepearingToBuild == false || _bots.Count == 1)
+        if (_isPrepearingToBuild == false || _bots.Count < _minBotsCountToBuild)
             TrySpawnBot();
     }
 
+    private List<Resourse> GetFreeResourses() => _scaner.Scan().Except(_resoursesDataBase.GetBusyResourses).ToList();
+    
     private void TrySpawnBot()
     {
         int price = _botFactory.BotBuildPrice;
@@ -133,14 +131,6 @@ public class Base : MonoBehaviour, ITarget
         DistributeResources();
     }
 
-    private List<Resourse> GetFreeResourses()
-    {
-        List<Resourse> resourses = _scaner.Scan();
-
-        resourses = resourses.Except(_resoursesDataBase.GetBusyResourses).ToList();
-
-        return resourses;
-    }
     private void DistributeResources()
     {
         List<Resourse> resourses = GetFreeResourses();

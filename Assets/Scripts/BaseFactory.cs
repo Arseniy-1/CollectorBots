@@ -5,7 +5,7 @@ using UnityEngine;
 public class BaseFactory : MonoBehaviour
 {
     [SerializeField] private Base _basePrefab;
-    [SerializeField] private ResoursesDataBase _resoursesDataBase;    
+    [SerializeField] private BusyResoursesDataBase _resoursesDataBase;    
 
     public void Create(Bot bot)
     {

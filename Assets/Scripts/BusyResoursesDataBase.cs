@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class ResoursesDataBase : MonoBehaviour
+public class BusyResoursesDataBase : MonoBehaviour
 {
-    List<Resourse> _busyResourses = new List<Resourse>();
+    private List<Resourse> _busyResourses = new List<Resourse>();
 
-    public List<Resourse> GetBusyResourses => _busyResourses;
+    public IReadOnlyList<Resourse> GetBusyResourses  => _busyResourses;
 
     public void AddBusyResourse(Resourse resourse)
     {

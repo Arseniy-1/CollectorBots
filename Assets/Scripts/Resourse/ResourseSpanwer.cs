@@ -15,6 +15,12 @@ public class ResourseSpanwer : MonoBehaviour
         StartCoroutine(GeneratingResourses());
     }
 
+    public void PlaceInPool(Resourse resourse)
+    {
+        resourse.OnDisabled -= PlaceInPool;
+        _resoursePool.Release(resourse);
+    }
+    
     private IEnumerator GeneratingResourses()
     {
         WaitForSeconds wait = new WaitForSeconds(_spawnDelay);
@@ -48,11 +54,5 @@ public class ResourseSpanwer : MonoBehaviour
         resourse.OnDisabled += PlaceInPool;
 
         resourse.transform.position = spawnPosition;
-    }
-
-    public void PlaceInPool(Resourse resourse)
-    {
-        resourse.OnDisabled -= PlaceInPool;
-        _resoursePool.Release(resourse);
     }
 }
